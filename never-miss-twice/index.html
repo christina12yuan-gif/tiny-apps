@@ -1,0 +1,226 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Never Miss Twice</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one narrow column, a cross-stitch sampler — each habit is a row of stitched days on Aida cloth. */
+:root{
+  --cloth:#EDEFEA; --cloth-hole:#D3D7CF; --panel:#F8F9F6; --ink:#1F2733; --muted:#5E6873;
+  --thread:#2C4A86; --thread-hi:#7A97CF; --madder:#B8432F; --madder-soft:#F6E1DA; --line:#D8DCD4;
+  --t-indigo:#2C4A86; --t-moss:#4F7A3A; --t-rust:#B5622B;
+  --display:"Young Serif", Georgia, "Times New Roman", serif;
+  --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --cloth:#1B2029; --cloth-hole:#2C3340; --panel:#222833; --ink:#E7EAEE; --muted:#9AA4B1;
+  --thread:#8FAEE6; --thread-hi:#C9D8F5; --madder:#EE8A74; --madder-soft:#3A2522; --line:#343B48;
+  --t-indigo:#8FAEE6; --t-moss:#9CC985; --t-rust:#E9A36F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --cloth:#1B2029; --cloth-hole:#2C3340; --panel:#222833; --ink:#E7EAEE; --muted:#9AA4B1;
+  --thread:#8FAEE6; --thread-hi:#C9D8F5; --madder:#EE8A74; --madder-soft:#3A2522; --line:#343B48;
+  --t-indigo:#8FAEE6; --t-moss:#9CC985; --t-rust:#E9A36F; color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--cloth)}
+body{color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:28px 48px;
+  background-image:radial-gradient(var(--cloth-hole) 1.1px, transparent 1.4px);background-size:9px 9px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,46px);line-height:1.05;margin:0;text-wrap:balance}
+.lede{margin:0;color:var(--muted);max-width:44ch}
+.date{font-variant-numeric:tabular-nums}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.habit-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.habit-name{font-family:var(--display);font-size:22px;line-height:1.2;margin:0;min-width:0;overflow-wrap:anywhere}
+.mvp{margin:2px 0 0;color:var(--muted);font-size:14px}
+.mvp b{color:var(--ink);font-weight:600}
+.icon-btn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;font:inherit;font-size:13px;padding:4px 10px;cursor:pointer;flex:none}
+.icon-btn:hover{color:var(--ink);border-color:var(--muted)}
+
+.status{border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.4}
+.status.ok{background:color-mix(in srgb,var(--h) 12%,transparent);color:var(--ink)}
+.status.open{background:transparent;border:1px dashed var(--line);color:var(--muted)}
+.status.warn{background:var(--madder-soft);color:var(--ink);border-left:3px solid var(--madder)}
+.status.warn strong{color:var(--madder)}
+
+.sampler{display:grid;grid-template-columns:repeat(14,1fr);gap:3px}
+.day{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
+.cell{width:100%;aspect-ratio:1;max-width:100%;border:none;padding:0;cursor:pointer;border-radius:3px;position:relative;
+  background:radial-gradient(var(--cloth-hole) 1px,transparent 1.3px) 0 0/33.3% 33.3%, var(--cloth)}
+.cell svg{position:absolute;inset:12%;width:76%;height:76%}
+.cell.before{opacity:.35;cursor:default}
+.cell.today{outline:2px dashed var(--h);outline-offset:1px}
+.cell:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.knot{width:5px;height:5px;border-radius:50%;background:transparent}
+.knot.on{background:var(--madder)}
+.dl{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums;line-height:1}
+.dl.t{color:var(--ink);font-weight:700}
+
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.stat{font-size:13px;color:var(--muted)}
+.stat b{font-family:var(--display);font-weight:400;font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums;margin-right:4px}
+.stitch-btn{font:inherit;font-weight:600;font-size:15px;border:none;border-radius:999px;padding:11px 20px;cursor:pointer;
+  background:var(--h);color:var(--panel);display:inline-flex;align-items:center;gap:8px}
+.stitch-btn.done{background:transparent;color:var(--h);box-shadow:inset 0 0 0 1.5px var(--h)}
+.stitch-btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.add{font:inherit;font-weight:600;border:1.5px dashed var(--line);background:transparent;color:var(--muted);border-radius:14px;padding:16px;cursor:pointer}
+.add:hover{color:var(--ink);border-color:var(--muted)}
+
+/* Setup sheet mirrors Jess's handout fields */
+.sheet{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 18px;display:flex;flex-direction:column;gap:16px}
+.sheet h2{font-family:var(--display);font-weight:400;font-size:24px;margin:0}
+.presets{display:flex;flex-direction:column;gap:8px}
+.preset{text-align:left;font:inherit;border:1px solid var(--line);background:var(--cloth);color:var(--ink);border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:1px}
+.preset:hover,.preset[aria-pressed="true"]{border-color:var(--thread)}
+.preset span{font-size:13px;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:15px}
+.field input{font:inherit;color:var(--ink);background:transparent;border:none;border-bottom:1.5px dashed var(--muted);padding:6px 2px;border-radius:0}
+.field input:focus{outline:none;border-bottom-style:solid;border-bottom-color:var(--thread)}
+.threads{display:flex;gap:10px;align-items:center}
+.thread{width:30px;height:30px;border-radius:50%;border:3px solid var(--panel);box-shadow:0 0 0 1.5px var(--line);cursor:pointer;padding:0}
+.thread[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.btn{font:inherit;font-weight:600;border-radius:999px;padding:10px 18px;cursor:pointer;border:1.5px solid var(--line);background:transparent;color:var(--ink)}
+.btn.primary{background:var(--thread);border-color:var(--thread);color:var(--panel)}
+.btn.danger{color:var(--madder);border-color:transparent;margin-right:auto;padding-inline:4px}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.credit{font-size:13px;color:var(--muted);text-align:center;margin:8px 0 0}
+@media (prefers-reduced-motion:no-preference){.cell svg{animation:pop .25s ease-out}@keyframes pop{from{transform:scale(.6);opacity:0}}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Habit tracker · <span class="date" id="today"></span></div>
+    <h1>Never Miss Twice</h1>
+    <p class="lede">Missing a day is life. Missing two is the start of a new habit. Stitch each day you show up, and if there's a gap, close it tomorrow with your easy minimum.</p>
+  </header>
+  <main id="app" class="wrap" style="gap:16px"></main>
+  <p class="credit">Made from Jess's midterm talk. Morning walk and screen-off habits from Alejandro's talk on sleep.</p>
+</div>
+
+<script>
+(function(){
+const KEY="nmt.v1";
+const THREADS=[["indigo","--t-indigo"],["moss","--t-moss"],["rust","--t-rust"]];
+const PRESETS=[
+  {name:"Morning walk",mvp:"Step outside in daylight for 2 minutes",src:"Alejandro: 10+ min outside in daylight"},
+  {name:"Screen off before bed",mvp:"Phone on the charger, out of reach, at bedtime",src:"Alejandro: screens off 1h+ before bed"},
+  {name:"Evening walk around sunset",mvp:"One loop around the block",src:"Alejandro: 10+ min around sunset"},
+];
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const TODAY=new Date();TODAY.setHours(12,0,0,0);
+const T=iso(TODAY),Y=iso(addDays(TODAY,-1));
+document.getElementById("today").textContent=TODAY.toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
+
+let state=load();
+let editing=null; // null | "new" | habit id
+
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.habits))return s}catch(e){}return{habits:[]}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const tvar=h=>(THREADS.find(t=>t[0]===h.thread)||THREADS[0])[1];
+
+function isDone(h,d){return !!(h.log&&h.log[d])}
+function status(h){
+  if(isDone(h,T))return{cls:"ok",html:"Stitched for today. Nice."};
+  const started=h.created<=Y;
+  if(!started||isDone(h,Y))return{cls:"open",html:"Today is open. Even the minimum counts: <b>"+esc(h.mvp)+"</b>."};
+  const d2=iso(addDays(TODAY,-2));
+  if(h.created<=d2&&!isDone(h,d2))return{cls:"warn",html:"<strong>A few days slipped.</strong> No catching up needed. Start again today with just: "+esc(h.mvp)+"."};
+  return{cls:"warn",html:"<strong>Yesterday slipped. Don't miss twice.</strong> Do the easy minimum today: "+esc(h.mvp)+"."};
+}
+// days since the last double miss (two consecutive missed days), counting only since habit start
+function cleanRun(h){
+  let n=0;
+  for(let i=0;i<400;i++){
+    const d=addDays(TODAY,-i),k=iso(d);
+    if(k<h.created)break;
+    const prev=iso(addDays(d,-1));
+    if(i>0&&!isDone(h,k)&&prev>=h.created&&!isDone(h,prev))break;
+    n++;
+  }
+  return n;
+}
+function stitchSVG(){return '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3 L17 17" stroke="var(--h)" stroke-width="4.2" stroke-linecap="round"/><path d="M17 3 L3 17" stroke="var(--h)" stroke-width="4.2" stroke-linecap="round"/><path d="M15.6 4.6 L5 15.2" stroke="var(--panel)" stroke-opacity=".35" stroke-width="1" stroke-linecap="round"/></svg>'}
+
+function render(){
+  const app=document.getElementById("app");
+  if(editing!==null){app.innerHTML=sheetHTML();bindSheet();return}
+  if(!state.habits.length){editing="new";render();return}
+  let html="";
+  for(const h of state.habits){
+    const st=status(h),done=isDone(h,T);
+    let cells="";
+    for(let i=13;i>=0;i--){
+      const d=addDays(TODAY,-i),k=iso(d),before=k<h.created,dn=isDone(h,k);
+      const prev=iso(addDays(d,-1));
+      const dbl=!before&&!dn&&i>0&&prev>=h.created&&!isDone(h,prev);
+      const label=d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})+(dn?", stitched":", not stitched");
+      cells+='<div class="day"><button class="cell'+(before?" before":"")+(i===0?" today":"")+'" data-h="'+h.id+'" data-d="'+k+'" aria-label="'+esc(label)+'" '+(before?"disabled":"")+'>'+(dn?stitchSVG():"")+'</button><span class="knot'+(dbl?" on":"")+'"></span><span class="dl'+(i===0?" t":"")+'">'+"SMTWTFS"[d.getDay()]+'</span></div>';
+    }
+    const run=cleanRun(h);
+    html+='<section class="card" style="--h:var('+tvar(h)+')">'
+      +'<div class="habit-top"><div style="min-width:0"><h2 class="habit-name">'+esc(h.name)+'</h2><p class="mvp">Easy minimum: <b>'+esc(h.mvp)+'</b></p></div><button class="icon-btn" data-edit="'+h.id+'">Edit</button></div>'
+      +'<div class="status '+st.cls+'">'+st.html+'</div>'
+      +'<div class="sampler" role="group" aria-label="Last 14 days">'+cells+'</div>'
+      +'<div class="foot"><div class="stat"><b>'+run+'</b>'+(run===1?"day":"days")+' without missing twice</div>'
+      +'<button class="stitch-btn'+(done?" done":"")+'" data-toggle="'+h.id+'">'+(done?"Stitched today · undo":"Stitch today")+'</button></div>'
+      +'</section>';
+  }
+  if(state.habits.length<3)html+='<button class="add" id="add">+ Add another habit</button>';
+  html+='<p class="hint" style="text-align:center">Tap any past square to fix a day. A red knot marks a second missed day in a row.</p>';
+  app.innerHTML=html;
+  app.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=()=>toggle(b.dataset.toggle,T));
+  app.querySelectorAll(".cell:not(.before)").forEach(b=>b.onclick=()=>toggle(b.dataset.h,b.dataset.d));
+  app.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{editing=b.dataset.edit;render()});
+  const a=document.getElementById("add");if(a)a.onclick=()=>{editing="new";render()};
+}
+function toggle(id,d){
+  const h=state.habits.find(x=>x.id===id);if(!h)return;
+  h.log=h.log||{};
+  if(h.log[d])delete h.log[d];else h.log[d]=1;
+  if(d<h.created)h.created=d;
+  save();render();
+}
+
+function sheetHTML(){
+  const h=editing==="new"?{name:"",mvp:"",thread:THREADS[state.habits.length%3][0]}:state.habits.find(x=>x.id===editing);
+  const presets=editing==="new"?'<div class="field"><label>Start from a classmate\'s talk</label><div class="presets">'+PRESETS.map((p,i)=>'<button class="preset" data-p="'+i+'" aria-pressed="false">'+esc(p.name)+'<span>'+esc(p.src)+'</span></button>').join("")+'</div></div>':"";
+  return '<form class="sheet" id="sheet" style="--h:var(--thread)"><h2>'+(editing==="new"?(state.habits.length?"Add a habit":"Pick one habit"):"Edit habit")+'</h2>'
+    +presets
+    +'<div class="field"><label for="f-name">One habit I want to develop:</label><input id="f-name" required maxlength="60" value="'+esc(h.name)+'" placeholder="e.g. Read before bed"></div>'
+    +'<div class="field"><label for="f-mvp">My easy minimum (MVP):</label><input id="f-mvp" required maxlength="80" value="'+esc(h.mvp)+'" placeholder="e.g. One page"></div>'
+    +'<p class="hint">The minimum is what you do on a bad day, small enough that you can\'t say no.</p>'
+    +'<div class="field"><label>Thread colour</label><div class="threads">'+THREADS.map(t=>'<button type="button" class="thread" data-t="'+t[0]+'" aria-label="'+t[0]+'" aria-pressed="'+(h.thread===t[0])+'" style="background:var('+t[1]+')"></button>').join("")+'</div></div>'
+    +'<div class="row">'+(editing!=="new"?'<button type="button" class="btn danger" id="del">Delete</button>':"")
+    +(state.habits.length?'<button type="button" class="btn" id="cancel">Cancel</button>':"")
+    +'<button class="btn primary" type="submit">'+(editing==="new"?"Start stitching":"Save")+'</button></div></form>';
+}
+function bindSheet(){
+  const f=document.getElementById("sheet");let thread=(f.querySelector('.thread[aria-pressed="true"]')||{}).dataset?.t||"indigo";
+  f.querySelectorAll(".preset").forEach(b=>b.onclick=e=>{e.preventDefault();const p=PRESETS[+b.dataset.p];
+    f.querySelector("#f-name").value=p.name;f.querySelector("#f-mvp").value=p.mvp;
+    f.querySelectorAll(".preset").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+  f.querySelectorAll(".thread").forEach(b=>b.onclick=()=>{thread=b.dataset.t;f.querySelectorAll(".thread").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+  const c=document.getElementById("cancel");if(c)c.onclick=()=>{editing=null;render()};
+  const del=document.getElementById("del");
+  if(del)del.onclick=()=>{if(del.dataset.armed){state.habits=state.habits.filter(x=>x.id!==editing);save();editing=null;render()}else{del.dataset.armed=1;del.textContent="Tap again to delete"}};
+  f.onsubmit=e=>{e.preventDefault();
+    const name=f.querySelector("#f-name").value.trim(),mvp=f.querySelector("#f-mvp").value.trim();if(!name||!mvp)return;
+    if(editing==="new")state.habits.push({id:"h"+Date.now().toString(36),name,mvp,thread,created:T,log:{}});
+    else Object.assign(state.habits.find(x=>x.id===editing),{name,mvp,thread});
+    save();editing=null;render()};
+}
+render();
+})();
+</script>
+</body></html>
